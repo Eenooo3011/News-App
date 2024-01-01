@@ -1,0 +1,142 @@
+<html>
+<head>
+<title>MainActivity.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MainActivity.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.example.finalproject</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.os.Bundle</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.util.Log</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.View</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Button</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">androidx.appcompat.app.AppCompatActivity</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.appcompat.widget.SearchView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.recyclerview.widget.LinearLayoutManager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.recyclerview.widget.RecyclerView</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.google.android.material.progressindicator.LinearProgressIndicator</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.kwabenaberko.newsapilib.NewsApiClient</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.kwabenaberko.newsapilib.models.Article</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.kwabenaberko.newsapilib.models.request.TopHeadlinesRequest</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.kwabenaberko.newsapilib.models.response.ArticleResponse</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.util.ArrayList</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.List</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.Objects</span><span class="s0">;</span>
+
+<span class="s0">public class </span><span class="s1">MainActivity </span><span class="s0">extends </span><span class="s1">AppCompatActivity </span><span class="s0">implements </span><span class="s1">View.OnClickListener{</span>
+    <span class="s1">RecyclerView recyclerView</span><span class="s0">;</span>
+    <span class="s1">List&lt;Article&gt; articleList = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;()</span><span class="s0">;</span>
+    <span class="s1">NewsRecyclerAdapter adapter</span><span class="s0">;</span>
+    <span class="s1">LinearProgressIndicator progressIndicator</span><span class="s0">;</span>
+    <span class="s1">Button btn1</span><span class="s0">,</span><span class="s1">btn2</span><span class="s0">,</span><span class="s1">btn3</span><span class="s0">,</span><span class="s1">btn4</span><span class="s0">,</span><span class="s1">btn5</span><span class="s0">,</span><span class="s1">btn6</span><span class="s0">,</span><span class="s1">btn7</span><span class="s0">;</span>
+    <span class="s1">SearchView searchView</span><span class="s0">;</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) {</span>
+        <span class="s0">super</span><span class="s1">.onCreate(savedInstanceState)</span><span class="s0">;</span>
+        <span class="s1">setContentView(R.layout.activity_main)</span><span class="s0">;</span>
+        <span class="s1">recyclerView = findViewById(R.id.news_recycle_view)</span><span class="s0">;</span>
+        <span class="s1">progressIndicator = findViewById(R.id.progress_bar)</span><span class="s0">;</span>
+        <span class="s1">searchView = findViewById(R.id.search_view)</span><span class="s0">;</span>
+        <span class="s1">btn1 = findViewById(R.id.btn_1)</span><span class="s0">;</span>
+        <span class="s1">btn2 = findViewById(R.id.btn_2)</span><span class="s0">;</span>
+        <span class="s1">btn3 = findViewById(R.id.btn_3)</span><span class="s0">;</span>
+        <span class="s1">btn4 = findViewById(R.id.btn_4)</span><span class="s0">;</span>
+        <span class="s1">btn5 = findViewById(R.id.btn_5)</span><span class="s0">;</span>
+        <span class="s1">btn6 = findViewById(R.id.btn_6)</span><span class="s0">;</span>
+        <span class="s1">btn7 = findViewById(R.id.btn_7)</span><span class="s0">;</span>
+        <span class="s1">btn1.setOnClickListener(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">btn2.setOnClickListener(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">btn3.setOnClickListener(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">btn4.setOnClickListener(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">btn5.setOnClickListener(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">btn6.setOnClickListener(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">btn7.setOnClickListener(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">searchView.setOnQueryTextListener(</span><span class="s0">new </span><span class="s1">SearchView.OnQueryTextListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public boolean </span><span class="s1">onQueryTextSubmit(String query) {</span>
+                <span class="s1">getNews(</span><span class="s2">&quot;GENERAL&quot;</span><span class="s0">, </span><span class="s1">query)</span><span class="s0">;</span>
+                <span class="s0">return true;</span>
+            <span class="s1">}</span>
+
+            <span class="s1">@Override</span>
+            <span class="s0">public boolean </span><span class="s1">onQueryTextChange(String newText) {</span>
+                <span class="s0">return false;</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s0">;</span>
+
+        <span class="s1">setupRecyclerView()</span><span class="s0">;</span>
+        <span class="s1">getNews(</span><span class="s2">&quot;GENERAL&quot;</span><span class="s0">, null</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">void </span><span class="s1">setupRecyclerView() {</span>
+        <span class="s1">recyclerView.setLayoutManager(</span><span class="s0">new </span><span class="s1">LinearLayoutManager(</span><span class="s0">this</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">adapter = </span><span class="s0">new </span><span class="s1">NewsRecyclerAdapter(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">recyclerView.setAdapter(adapter)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">void </span><span class="s1">changeInProgress(</span><span class="s0">boolean </span><span class="s1">show) {</span>
+        <span class="s0">if </span><span class="s1">(show) {</span>
+            <span class="s1">progressIndicator.setVisibility(View.VISIBLE)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s1">progressIndicator.setVisibility(View.INVISIBLE)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s0">void </span><span class="s1">getNews(String category</span><span class="s0">, </span><span class="s1">String query) {</span>
+        <span class="s1">changeInProgress(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">NewsApiClient newsApiClient = </span><span class="s0">new </span><span class="s1">NewsApiClient(</span><span class="s2">&quot;c7547dac43764a4b9cb8df9e1663bd04&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">newsApiClient.getTopHeadlines(</span>
+                <span class="s0">new </span><span class="s1">TopHeadlinesRequest.Builder()</span>
+                        <span class="s1">.language(</span><span class="s2">&quot;en&quot;</span><span class="s1">)</span>
+                        <span class="s1">.category(category)</span>
+                        <span class="s1">.q(query)</span>
+                        <span class="s1">.build()</span><span class="s0">,</span>
+                <span class="s0">new </span><span class="s1">NewsApiClient.ArticlesResponseCallback() {</span>
+                    <span class="s1">@Override</span>
+                    <span class="s0">public void </span><span class="s1">onSuccess(ArticleResponse response) {</span>
+                        <span class="s1">runOnUiThread(() -&gt; {</span>
+                            <span class="s1">changeInProgress(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">articleList = response.getArticles()</span><span class="s0">;</span>
+                            <span class="s1">adapter.updateData(articleList)</span><span class="s0">;</span>
+                        <span class="s1">})</span><span class="s0">;</span>
+                    <span class="s1">}</span>
+
+                    <span class="s1">@Override</span>
+                    <span class="s0">public void </span><span class="s1">onFailure(Throwable throwable) {</span>
+                        <span class="s1">Log.i(</span><span class="s2">&quot;GOT Failure&quot;</span><span class="s0">, </span><span class="s1">Objects.requireNonNull(throwable.getMessage()))</span><span class="s0">;</span>
+
+                        <span class="s3">// Jika error disebabkan oleh hal lain, tampilkan pesan error umum</span>
+                        <span class="s1">Log.i(</span><span class="s2">&quot;Unknown Error&quot;</span><span class="s0">, </span><span class="s1">throwable.getMessage())</span><span class="s0">;</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+        <span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">onClick(View v) {</span>
+        <span class="s1">Button btn =(Button) v</span><span class="s0">;</span>
+        <span class="s1">String category = btn.getText().toString()</span><span class="s0">;</span>
+        <span class="s1">getNews(category</span><span class="s0">, null</span><span class="s1">)</span><span class="s0">;</span>
+
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>
